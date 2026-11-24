@@ -29,15 +29,12 @@
         const params = new URLSearchParams(window.location.search);
         const fileName = params.get("file-name");
 
-        // Set the src attribute of the embed tag
+        // Set the src attribute of the embed element
         window.onload = function() {
             const embedElement = document.getElementById('game-embed');
-            if (fileName) {
-                embedElement.src = fileName;
-            } else {
-                console.error("File name not provided in the URL.");
-            }
+            embedElement.src = fileName;
         };
+
     </script>
   </head>
   <body>
