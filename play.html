@@ -14,9 +14,10 @@
             font-family: sans-serif;
         }
         .game-container {
-            aspect-ratio: 640 / 480;
+            aspect-ratio: 640 / 480; /* Default 4:3 fallback */
             height: 100vh;
             max-width: 100vw;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -48,10 +49,10 @@
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
             contextMenu: "off",
-            polyfills: false // Disable <embed> polyfill since we use the direct API
+            polyfills: false
         };
     </script>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script src="https://unpkg.com"></script>
   </head>
   <body>
     <div class="game-container" id="container"></div>
@@ -59,7 +60,16 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const fileName = params.get("file-name");
+        const aspectRatio = params.get("ratio");
         const container = document.getElementById("container");
+
+        // Apply custom aspect ratio if valid
+        if (aspectRatio) {
+            const formattedRatio = aspectRatio.replace(":", "/").trim();
+            if (/^\d+(\.\d+)?(\s*\/\s*\d+(\.\d+)?)?$/.test(formattedRatio)) {
+                container.style.aspectRatio = formattedRatio;
+            }
+        }
 
         function isValidSwf(name) {
             if (!name) return false;
@@ -68,11 +78,16 @@
         }
 
         function startRuffle(swfUrl) {
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            container.innerHTML = "";
-            container.appendChild(player);
-            player.load(swfUrl);
+            container.innerHTML = "<p>Loading game...</p>";
+
+            // Wait 1 second (1000ms) before loading Ruffle and the SWF
+            setTimeout(() => {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                container.innerHTML = "";
+                container.appendChild(player);
+                player.load(swfUrl);
+            }, 1000);
         }
 
         function showUploadPrompt(errorMessage = "") {
