@@ -10,11 +10,35 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: white;
+            font-family: sans-serif;
         }
         .game-container {
             aspect-ratio: 640 / 480;
             height: 100vh;
             max-width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        ruffle-player {
+            width: 100%;
+            height: 100%;
+        }
+        input[type="file"] {
+            background: #222;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .error-msg {
+            color: #ff5555;
+            font-weight: bold;
         }
     </style>
     <script>
@@ -23,27 +47,66 @@
         };
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
-            contextMenu: "off"
+            contextMenu: "off",
+            polyfills: false // Disable <embed> polyfill since we use the direct API
         };
     </script>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
   </head>
   <body>
-    <div class="game-container" id="container">
-        <embed id="game-embed" width="100%" height="100%">
-    </div>
+    <div class="game-container" id="container"></div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const fileName = params.get("file-name");
-        const embed = document.getElementById("game-embed");
+        const container = document.getElementById("container");
 
-        if (fileName) {
-            embed.src = fileName;
-        } else {
-            document.getElementById("container").innerHTML = 
-                "<p style='color:white; font-family:sans-serif;'>No file specified.</p>";
+        function isValidSwf(name) {
+            if (!name) return false;
+            const cleanName = name.split("?")[0].split("#")[0];
+            return cleanName.toLowerCase().endsWith(".swf");
         }
+
+        function startRuffle(swfUrl) {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            container.innerHTML = "";
+            container.appendChild(player);
+            player.load(swfUrl);
+        }
+
+        function showUploadPrompt(errorMessage = "") {
+            container.innerHTML = `
+                <h2>Load Flash Game (.swf)</h2>
+                ${errorMessage ? `<p class="error-msg">${errorMessage}</p>` : ""}
+                <p>Select a valid <strong>.swf</strong> file from your device:</p>
+                <input type="file" id="swf-picker" accept=".swf" />
+            `;
+
+            document.getElementById("swf-picker").addEventListener("change", function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (isValidSwf(file.name)) {
+                    const localBlobUrl = URL.createObjectURL(file);
+                    startRuffle(localBlobUrl);
+                } else {
+                    showUploadPrompt("Invalid file type. Please select a .swf file.");
+                }
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            if (fileName) {
+                if (isValidSwf(fileName)) {
+                    startRuffle(fileName);
+                } else {
+                    showUploadPrompt("Invalid URL parameter: File must be a .swf file.");
+                }
+            } else {
+                showUploadPrompt();
+            }
+        });
     </script>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
   </body>
 </html>
