@@ -19,23 +19,25 @@
         }
     </style>
     <script>
-        window.onbeforeunload = function() {
-            return "Are you sure you want to reload?";
-        };
-        window.RufflePlayer = window.RufflePlayer || {};
-        window.RufflePlayer.config = {
-            contextMenu: "off"
-        };
-        const params = new URLSearchParams(window.location.search);
-        const fileName = params.get("file-name");
+    window.onbeforeunload = function() {
+        return "Are you sure you want to reload?";
+    };
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.RufflePlayer.config = {
+        contextMenu: "off"
+    };
+    const params = new URLSearchParams(window.location.search);
+    const fileName = params.get("file-name");
 
-        // Set the src attribute of the embed element
-        window.onload = function() {
-            const embedElement = document.getElementById('game-embed');
-            embedElement.src = fileName;
-        };
+    // Ensure the fileName includes the correct path
+    const fullPath = fileName ? `../${fileName}` : '';
 
-    </script>
+    // Set the src attribute of the embed element
+    window.onload = function() {
+        const embedElement = document.getElementById('game-embed');
+        embedElement.src = fullPath;
+    };
+  </script>
   </head>
   <body>
     <div class="game-container">
