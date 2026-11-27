@@ -1,43 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="download.png"/>
-    <title>Bloons Insanity - Project School Stash</title>
-    <audio id="myAudio" autoplay loop>
-        <source src="audio.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          var audio = document.getElementById('myAudio');
-          audio.muted = true; // Mute the audio to bypass autoplay restriction
-          audio.play().then(function() {
-            audio.muted = false; // Unmute after playing
-          }).catch(function(error) {
-            console.log('Playback failed:', error);
-          });
-        });
-      </script>
+    <link rel="shortcut icon" type="image/jpeg" href="../../project-school-stash/favicon.jpg">
+    <link rel="stylesheet" href="../../project-school-stash/theme.css">
+    <script>
+        window.GAME_CONFIG = {
+            "infoFile": "game.info", // Reads "title = ..." and "genre = ..." automatically
+            "game.photo": "favicon.png",
+            "photo.background": "#000000",
+            "description": "Uh... I think the monkey went a little insane. Don't crash out!",
+            "song.title": "Primal One from Bloons Tower Defense 6",
+            "song.link": "https://www.youtube.com/watch?v=MhcD_CuFcOw"
+        };
+    </script>
+    <script src="../../project-school-stash/theme.js" defer></script>
 </head>
-<body>
-    <header>
-        <div style="text-align: center;">
-            <p><a href="https://www.youtube.com/watch?v=MhcD_CuFcOw">Song Playing: Primal One, from Bloons Tower Defense 6.</a></p>
-            <h1>Bloons Insanity</h1>
-            <p>Come drive your head into the dirt!</p>
-            <button onclick="window.location.href='/BloonsInsanity';">Play Now!</button>
-            <p>---------------</p>
-            <p>Not the one your looking for? Look below:</p>
-            <button onclick="window.location.href='/project-school-stash/flash/bloons/more-bloons/';">More Bloons</button>
-        </div>
-    </header>
-    <footer>
-        <div style="text-align: center;">
-          <p>_____________</p>
-          <button onclick="window.location.href='/project-school-stash/';">Return to Home</button>
-        </div>
-    </footer>
-</body>
+<body></body>
 </html>
